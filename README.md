@@ -24,4 +24,4 @@ To run the second stage demo, just type:
 ```shell
 python demo2.py
 ```
-Then the program will creat a window to display the scene capture by webcamera. You need press <kbd>SPACE</kbd> key to capture face in current frame and recognize the facial expression.
+Then the program will creat a window to display the scene capture by webcamera. It will continually capture your facial expression and typing sounds, showing the results and give warm words to you.
