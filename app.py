@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from flask_login import LoginManager, login_user, login_required, logout_user
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from datetime import datetime
 import DatabaseConnection
 import time
@@ -13,6 +13,12 @@ app.secret_key = 'asfasfasfasqwerqwr'
 @app.route('/')
 def index():
     return redirect('/homepage')
+
+
+# homepage route
+@app.route("/homepage")
+def homepage():
+    return render_template('homepage.html')
 
 
 # login routes and methods
@@ -46,7 +52,7 @@ def login():
             if userpermission == 1:
                 login_user(User(id=userid, username=username))
                 flash('Logged in successfully.')
-                return redirect(url_for('index'))
+                return redirect(url_for('dashboard'))
             else:
                 flash('Permission denied.')
                 return render_template('login.html')
@@ -63,10 +69,10 @@ def logout():
 
 
 # homepage route
-@app.route("/homepage")
+@app.route("/dashboard")
 @login_required
-def homepage():
-    return render_template('homepage.html')
+def dashboard():
+    return render_template('dashboard.html', user=current_user.username)
 
 
 if __name__ == '__main__':
