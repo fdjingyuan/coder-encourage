@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}Coder-Encourage | Statistics{% endblock %}
+{% block contenttitle %} Statistics {% endblock %}
+{% block link_statistics %}
+	<li class="active">
+{% endblock %}
+
+
+{% block extralinks %}
+	<!-- DataTables -->
+	<link rel="stylesheet" href="../static/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+{% endblock extralinks%}
+
+
+{% block content %}
+    <!-- Main content -->
+    <section class="content">
+
+		 <!-- Show daily record -->
+		 <div class="row">
+		  <div class="col-lg-8">
+			  <div class="box box-solid box-info">
+				<div class="box-header with-border">
+				  <h3 class="box-title">Daily record</h3>
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body">
+					<div class="table-responsive">
+					  <table id="record_table1" class="table table-bordered table-striped">
+						<thead>
+						<tr>
+						  <th><span class="hidden-xs hidden-sm">Date</span><span class="visible-xs visible-sm">Date</span></th>
+						  <th><span class="hidden-xs hidden-sm">Duration(hours)</span><span class="visible-xs visible-sm">Duration</span></th>
+						  <th><span class="hidden-xs hidden-sm">Average mood</span><span class="visible-xs visible-sm">Avg. mood</span></th>
+						</tr>
+						</thead>
+
+
+						<tbody>
+
+						{%for record in daily_record%}
+						<tr>
+							{%for item in record%}
+							<td>{{item}}</td>
+							{%endfor%}
+						</tr>
+						{%endfor%}
+
+						</tbody>
+
+						<tfoot>
+						<tr>
+						  <th><span class="hidden-xs hidden-sm">Date</span><span class="visible-xs visible-sm">Date</span></th>
+						  <th><span class="hidden-xs hidden-sm">Duration(hours)</span><span class="visible-xs visible-sm">Duration</span></th>
+						  <th><span class="hidden-xs hidden-sm">Average mood</span><span class="visible-xs visible-sm">Avg. mood</span></th>
+						</tr>
+						</tfoot>
+
+
+					  </table>
+					</div>
+				</div>
+				<!-- /.box-body -->
+			  </div>
+			  <!-- /.box -->
+		  </div>
+		 </div>
+
+		 <!-- Show hourly record -->
+		 <div class="row">
+		  <div class="col-lg-8">
+			  <div class="box box-solid box-info">
+				<div class="box-header with-border">
+				  <h3 class="box-title">Hourly record</h3>
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body">
+					<div class="table-responsive">
+					  <table id="record_table2" class="table table-bordered table-striped">
+						<thead>
+						<tr>
+						  <th><span class="hidden-xs hidden-sm">Date</span><span class="visible-xs visible-sm">Date</span></th>
+						  <th><span class="hidden-xs hidden-sm">Start time</span><span class="visible-xs visible-sm">Start time</span></th>
+						  <th><span class="hidden-xs hidden-sm">Average mood</span><span class="visible-xs visible-sm">Avg. mood</span></th>
+						</tr>
+						</thead>
+
+
+						<tbody>
+
+						{%for record in hourly_record%}
+						<tr>
+							{%for item in record%}
+							<td>{{item}}</td>
+							{%endfor%}
+						</tr>
+						{%endfor%}
+
+						</tbody>
+
+						<tfoot>
+						<tr>
+						  <th><span class="hidden-xs hidden-sm">Date</span><span class="visible-xs visible-sm">Date</span></th>
+						  <th><span class="hidden-xs hidden-sm">Start time</span><span class="visible-xs visible-sm">Start time</span></th>
+						  <th><span class="hidden-xs hidden-sm">Average mood</span><span class="visible-xs visible-sm">Avg. mood</span></th>
+						</tr>
+						</tfoot>
+
+
+					  </table>
+					</div>
+				</div>
+				<!-- /.box-body -->
+			  </div>
+			  <!-- /.box -->
+		  </div>
+		 </div>
+
+    </section>
+    <!-- /.content -->
+{% endblock content%}
+
+{% block extrascripts %}
+	<!-- DataTables -->
+	<script src="../static/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+	<script src="../static/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+	<!-- SlimScroll -->
+	<script src="../static/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+	<!-- FastClick -->
+	<script src="../static/bower_components/fastclick/lib/fastclick.js"></script>
+	<!-- Page script -->
+	<script>
+		$(function () {
+			$('#record_table1').DataTable()
+			$('#record_table2').DataTable()
+		})
+	</script>
+
+{% endblock extrascripts%}
+

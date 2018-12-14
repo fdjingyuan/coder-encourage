@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block title %}Coder-Encourage | Analyze{% endblock %}
+{% block contenttitle %} Analyze {% endblock %}
+{% block link_analyze %}
+	<li class="active">
+{% endblock %}
+
+{% block content %}
+    <!-- Main content -->
+    <section class="content">
+
+		<!-- Show Pie Chart -->
+		<div class="row">
+			<div class="col-lg-7">
+				<div class="box box-solid box-info">
+
+					<div class="box-header with-border">
+						<i class="fa fa-bar-chart-o"></i>
+						<h3 class="box-title">Emotion Pie Chart</h3>
+					</div>
+
+					<div id="canvas-holder-pie" style="width:100%">
+						<canvas id="chart-area-pie"></canvas>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<!-- Show Bar Chart -->
+		<div class="row">
+			<div class="col-lg-7">
+				<div class="box box-solid box-info">
+
+					<div class="box-header with-border">
+						<i class="fa fa-bar-chart-o"></i>
+						<h3 class="box-title">Mood Bar Chart</h3>
+					</div>
+
+					<div id="canvas-holder-bar1" style="width:100%;">
+						<canvas id="chart-area-bar1" width="400" height="300"></canvas>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+    </section>
+    <!-- /.content -->
+{% endblock content%}
+
+{% block extrascripts %}
+
+	<!-- FLOT CHARTS -->
+	<script src="../static/bower_components/Flot/jquery.flot.js"></script>
+	<!-- FLOT RESIZE PLUGIN - allows the chart to redraw when the window is resized -->
+	<script src="../static/bower_components/Flot/jquery.flot.resize.js"></script>
+	<!-- FLOT PIE PLUGIN - also used to draw donut charts -->
+	<script src="../static/bower_components/Flot/jquery.flot.pie.js"></script>
+	<!-- FLOT CATEGORIES PLUGIN - Used to draw bar charts -->
+	<script src="../static/bower_components/Flot/jquery.flot.categories.js"></script>
+	<!-- New Chart js -->
+	<script src="../static/bower_components/Chart.js-2.7.2/dist/Chart.bundle.js"></script>
+	<!-- Page script -->
+	<script>
+
+		chartColors = {
+			red: 'rgb(255, 99, 132)',
+			orange: 'rgb(255, 159, 64)',
+			yellow: 'rgb(255, 205, 86)',
+			green: 'rgb(75, 192, 192)',
+			blue: 'rgb(54, 162, 235)',
+			purple: 'rgb(153, 102, 255)',
+			grey: 'rgb(201, 203, 207)'
+		};
+		var config = {
+			type: 'doughnut',
+			data: {
+				datasets: [{
+					data: {{ pie_data | tojson }},
+					backgroundColor: [
+						chartColors.red,
+						chartColors.orange,
+						chartColors.yellow,
+						chartColors.green,
+						chartColors.blue,
+						chartColors.blue,
+						chartColors.blue,
+						chartColors.blue,
+						chartColors.blue,
+					],
+				}],
+				labels: {{ pie_labels | tojson }}
+			},
+			options: {
+				responsive: true,
+				legend: {
+					position: 'right',
+				},
+				title: {
+					display: true,
+					text: 'Chart - Distribution of all emotions'
+				},
+				animation: {
+					animateScale: true,
+					animateRotate: true
+				}
+			}
+		};
+
+		var DATES = ['11/21', '11/22', '11/23', '11/24', '11/25', '11/26', '11/27'];
+		var color = Chart.helpers.color;
+		var barChartData = {
+			labels: DATES,
+			datasets: [{
+				label: 'Average mood',
+				backgroundColor: color(chartColors.red).alpha(0.5).rgbString(),
+				borderColor: chartColors.red,
+				borderWidth: 1,
+				data: {{ mooddata | tojson }}
+			}]
+
+		};
+
+
+		var ctx = document.getElementById('chart-area-pie').getContext('2d');
+		var myDoughnut = new Chart(ctx, config);
+
+		var ctx = document.getElementById('chart-area-bar1').getContext('2d');
+		var myBar = new Chart(ctx, {
+			type: 'bar',
+			data: barChartData,
+			options: {
+				responsive: true,
+				legend: {
+					position: 'top',
+				},
+				title: {
+					display: true,
+					text: 'Chart - Average mood of each date'
+				}
+			}
+		});
+
+	</script>
+
+{% endblock extrascripts%}
