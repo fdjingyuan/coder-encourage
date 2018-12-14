@@ -11,7 +11,7 @@ flags.DEFINE_string('train_data', './data/fer2013/fer2013.csv',
                     'Path to training data.')
 flags.DEFINE_string('valid_data', './valid_sets/',
                     'Path to training data.')
-flags.DEFINE_boolean('show_box', False, 
+flags.DEFINE_boolean('show_box', True,
                     'If true, the results will show detection box')
 FLAGS = flags.FLAGS
 

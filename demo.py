@@ -9,7 +9,7 @@ from model import predict, image_to_tensor, deepnn
 
 CASC_PATH = './data/haarcascade_files/haarcascade_frontalface_default.xml'
 cascade_classifier = cv2.CascadeClassifier(CASC_PATH)
-EMOTIONS = ['angry', 'disgusted', 'fearful', 'happy', 'sad', 'surprised', 'neutral']
+EMOTIONS = ['Angry', 'Disgusted', 'Fearful', 'Happy', 'Sad', 'Surprised', 'Neutral']
 
 def format_image(image):
   if len(image.shape) > 2 and image.shape[2] == 3:
@@ -75,7 +75,7 @@ def resize_image(image, size):
 def draw_emotion():
   pass
 
-def demo(modelPath, showBox=False):
+def demo(modelPath, showBox=True):
   face_x = tf.placeholder(tf.float32, [None, 2304])
   y_conv = deepnn(face_x)
   probs = tf.nn.softmax(y_conv)
@@ -99,10 +99,25 @@ def demo(modelPath, showBox=False):
   while True:
     ret, frame = video_captor.read()
     detected_face, face_coor = format_image(frame)
+
+    window_name = 'Face Expression Recognition'
+    cv2.namedWindow(window_name, cv2.WND_PROP_FULLSCREEN)
+    cv2.moveWindow(window_name, 0, 0)
+
     if showBox:
       if face_coor is not None:
         [x,y,w,h] = face_coor
         cv2.rectangle(frame, (x,y), (x+w,y+h), (255,0,0), 2)
+
+    ratio = 0.8
+    frame = cv2.resize(frame, None, fx=ratio, fy=ratio, interpolation=cv2.INTER_CUBIC)
+    move_dx = (1 - ratio) * 1280
+    move_dy = (1 - ratio) * 360
+    M = np.float32([[1, 0, move_dx], [0, 1, move_dy]])
+    new_height, new_width, _ = frame.shape
+    frame = cv2.warpAffine(frame, M, (1280, 720))
+
+    cv2.rectangle(frame, (0, 0), (int(move_dx), 720), (255, 255, 255), -1)
 
     if cv2.waitKey(1) & 0xFF == ord(' '):
 
@@ -113,14 +128,26 @@ def demo(modelPath, showBox=False):
         # print(result)
     if result is not None:
       for index, emotion in enumerate(EMOTIONS):
-        cv2.putText(frame, emotion, (10, index * 20 + 20), cv2.FONT_HERSHEY_PLAIN, 0.5, (0, 255, 0), 1)
-        cv2.rectangle(frame, (130, index * 20 + 10), (130 + int(result[0][index] * 100), (index + 1) * 20 + 4),
+        cv2.putText(frame, emotion, (10, index * 20 + 100), cv2.FONT_HERSHEY_PLAIN, 1.0, (0, 0, 0), 1)
+        cv2.rectangle(frame, (130, index * 20 + 90), (130 + int(result[0][index] * 100), (index + 1) * 20 + 84),
                       (255, 0, 0), -1)
-        emoji_face = feelings_faces[np.argmax(result[0])]
-      print("1")
-      for c in range(0, 3):
-        frame[200:320, 10:130, c] = emoji_face[:, :, c] * (emoji_face[:, :, 3] / 255.0) + frame[200:320, 10:130, c] * (1.0 - emoji_face[:, :, 3] / 255.0)
-    cv2.imshow('face', frame)
+        emotion_type = EMOTIONS[np.argmax(result[0])]
+        prob = float(np.max(result[0]) * 100)
+        cv2.putText(frame, emotion_type, (20, 490), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 0, 0), 1)
+        cv2.putText(frame, str('%.2f' % prob + "%"), (150, 490), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 0, 0), 1)
+
+      #   emoji_face = feelings_faces[np.argmax(result[0])]
+      # print("1")
+      # for c in range(0, 3):
+      #   frame[200:320, 10:130, c] = emoji_face[:, :, c] * (emoji_face[:, :, 3] / 255.0) + frame[200:320, 10:130, c] * (1.0 - emoji_face[:, :, 3] / 255.0)
+
+    detected_img = cv2.imread('a.jpg', 0)
+    detected_img = cv2.resize(detected_img, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
+    for c in range(0,3):
+      frame[340:436, int(move_dx/2)-48:int(move_dx/2)+48, c] = detected_img
+
+
+    cv2.imshow(window_name, frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
       break
 
