@@ -87,14 +87,15 @@ def demo(modelPath, showBox=True):
     saver.restore(sess, ckpt.model_checkpoint_path)
     print('Restore model sucsses!!\nNOTE: Press SPACE on keyboard to capture face.')
 
-  feelings_faces = []
-  for index, emotion in enumerate(EMOTIONS):
-    num = random.randint(1,3)
-    feelings_faces.append(cv2.imread('./data/emojis/' + emotion + str(num) + '.jpg', -1))
-  video_captor = cv2.VideoCapture(0)
+  # feelings_faces = []
+  # for index, emotion in enumerate(EMOTIONS):
+  #   num = random.randint(1,3)
+  #   feelings_faces.append(cv2.imread('./data/emojis/' + emotion + str(num) + '.jpg', -1))
+  # emoji_face = []
 
-  emoji_face = []
   result = None
+
+  video_captor = cv2.VideoCapture(0)
 
   while True:
     ret, frame = video_captor.read()
@@ -119,7 +120,7 @@ def demo(modelPath, showBox=True):
 
     cv2.rectangle(frame, (0, 0), (int(move_dx), 720), (255, 255, 255), -1)
 
-    if cv2.waitKey(1) & 0xFF == ord(' '):
+    if cv2.waitKey(10) & 0xFF == ord(' '):
 
       if detected_face is not None:
         cv2.imwrite('a.jpg', detected_face)
@@ -148,6 +149,6 @@ def demo(modelPath, showBox=True):
 
 
     cv2.imshow(window_name, frame)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    if cv2.waitKey(10) & 0xFF == ord('q'):
       break
 
